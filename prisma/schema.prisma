@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  email        String    @unique
+  name         String?
+  password     String
+  role         Role      @default(REPORTER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  assignedBugs Bug[]     @relation("Assignee")
+  reportedBugs Bug[]     @relation("Reporter")
+  comments     Comment[]
+}
+
+model Bug {
+  id             String    @id @default(uuid()) @db.Uuid
+  title          String
+  description    String?
+  priority       Priority  @default(MEDIUM)
+  status         Status    @default(OPEN)
+  environment    String?
+  attachmentUrls String[]  @default([])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  resolvedAt     DateTime?
+  reporterId     String    @db.Uuid
+  assigneeId     String?   @db.Uuid
+  assignee       User?     @relation("Assignee", fields: [assigneeId], references: [id])
+  reporter       User      @relation("Reporter", fields: [reporterId], references: [id])
+  comments       Comment[]
+}
+
+model Comment {
+  id        String    @id @default(uuid()) @db.Uuid
+  content   String
+  createdAt DateTime  @default(now())
+  bugId     String    @db.Uuid
+  userId    String    @db.Uuid
+  bug       Bug       @relation(fields: [bugId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  REPORTER
+  DEVELOPER
+  ADMIN
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
