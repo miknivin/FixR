@@ -1,9 +1,5 @@
 "use client";
-
-// import { useSidebar } from "@/context/SidebarContext";
-import AppHeader from "@/layout/AppHeader";
-// import AppSidebar from "@/layout/AppSidebar";
-import Backdrop from "@/layout/Backdrop";
+import AdminLayoutProvider from "@/layout/AdminLayoutProvider";
 import React from "react";
 
 export default function AdminLayout({
@@ -20,18 +16,11 @@ export default function AdminLayout({
   //   ? "lg:ml-[290px]"
   //   : "lg:ml-[90px]";
 
+
+
   return (
-    <div className="min-h-screen xl:flex">
-      {/* <AppSidebar /> */}
-      <Backdrop />
-      <div
-        className={`flex-1 transition-all  duration-300 ease-in-out`}
-      >
-        {/* Header */}
-        <AppHeader />
-        {/* Page Content */}
-        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
-      </div>
-    </div>
+    <>
+      <AdminLayoutProvider>{children}</AdminLayoutProvider>
+    </>
   );
 }

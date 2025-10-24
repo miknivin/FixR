@@ -17,7 +17,7 @@ export default function Buttons() {
       <PageBreadcrumb pageTitle="Buttons" />
       <div className="space-y-5 sm:space-y-6">
         {/* Primary Button */}
-        <ComponentCard title="Primary Button">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             <Button size="sm" variant="primary">
               Button Text
@@ -28,7 +28,7 @@ export default function Buttons() {
           </div>
         </ComponentCard>
         {/* Primary Button with Start Icon */}
-        <ComponentCard title="Primary Button with Left Icon">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             <Button size="sm" variant="primary" startIcon={<BoxIcon />}>
               Button Text
@@ -39,7 +39,7 @@ export default function Buttons() {
           </div>
         </ComponentCard>{" "}
         {/* Primary Button with Start Icon */}
-        <ComponentCard title="Primary Button with Right Icon">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             <Button size="sm" variant="primary" endIcon={<BoxIcon />}>
               Button Text
@@ -50,7 +50,7 @@ export default function Buttons() {
           </div>
         </ComponentCard>
         {/* Outline Button */}
-        <ComponentCard title="Secondary Button">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             {/* Outline Button */}
             <Button size="sm" variant="outline">
@@ -62,7 +62,7 @@ export default function Buttons() {
           </div>
         </ComponentCard>
         {/* Outline Button with Start Icon */}
-        <ComponentCard title="Outline Button with Left Icon">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             <Button size="sm" variant="outline" startIcon={<BoxIcon />}>
               Button Text
@@ -73,7 +73,7 @@ export default function Buttons() {
           </div>
         </ComponentCard>{" "}
         {/* Outline Button with Start Icon */}
-        <ComponentCard title="Outline Button with Right Icon">
+        <ComponentCard >
           <div className="flex items-center gap-5">
             <Button size="sm" variant="outline" endIcon={<BoxIcon />}>
               Button Text

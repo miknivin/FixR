@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setUser, setError, setLoading } from "@/app/lib/redux/slices/authSlice";
+import { setUser, setError, setLoading, setIsAuthenticated, logout } from "../slices/authSlice";
 
 interface UserResponse {
   id: number;
@@ -20,6 +20,11 @@ interface RegisterResponse {
   user: UserResponse;
 }
 
+interface MeResponse {
+  success: boolean;
+  user: UserResponse;
+}
+
 interface LoginCredentials {
   email: string;
   password: string;
@@ -33,7 +38,10 @@ interface RegisterCredentials {
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "/api/auth" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "/api/auth",
+    credentials: "include",
+  }),
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginCredentials>({
       query: (credentials) => ({
@@ -46,8 +54,10 @@ export const authApi = createApi({
           dispatch(setLoading(true));
           const { data } = await queryFulfilled;
           dispatch(setUser(data.user));
+          dispatch(setIsAuthenticated(true));
         } catch (error: any) {
           dispatch(setError(error.error?.data?.error || "Login failed"));
+          dispatch(setIsAuthenticated(false));
         } finally {
           dispatch(setLoading(false));
         }
@@ -64,14 +74,44 @@ export const authApi = createApi({
           dispatch(setLoading(true));
           const { data } = await queryFulfilled;
           dispatch(setUser(data.user));
+          dispatch(setIsAuthenticated(true));
         } catch (error: any) {
           dispatch(setError(error.error?.data?.error || "Registration failed"));
+          dispatch(setIsAuthenticated(false));
         } finally {
           dispatch(setLoading(false));
         }
       },
     }),
+    getMe: builder.query<MeResponse, void>({
+      query: () => ({
+        url: "/me",
+        method: "GET",
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          dispatch(setLoading(true));
+          const { data } = await queryFulfilled;
+          dispatch(setUser(data.user));
+          dispatch(setIsAuthenticated(true));
+        } catch (error: any) {
+          dispatch(setError(error.error?.data?.message || "Failed to fetch user"));
+          dispatch(setIsAuthenticated(false));
+        } finally {
+          dispatch(setLoading(false));
+        }
+      },
+    }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "/logout",
+        method: "POST",
+      }),
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(logout());
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useGetMeQuery, useLogoutMutation } = authApi;
